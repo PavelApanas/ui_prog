@@ -1,3 +1,4 @@
+from threading import Thread
 from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt)
 from PySide6.QtGui import (QCursor,
                            QFont)
@@ -66,7 +67,7 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.checkBox_2, 0, 1, 1, 1)
 
-        self.checkBox_data = {
+        self.checkbox_data = {
             '202': self.checkBox,
             '154': self.checkBox_2,
             '194': self.checkBox_3,
@@ -98,6 +99,11 @@ class Ui_Form(object):
     # retranslateUi
 
     def _check_data(self):
-        for key, value in self.checkBox_data.items():
+        from utils import get_response
+        res = ''
+        for key, value in self.checkbox_data.items():
             if value.isChecked():
-                print(key)
+                res += f'&services[]={key}'
+
+        thread = Thread(target=get_response, args=(res, ))
+        thread.start()
